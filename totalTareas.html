@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de tareas por usuario</title>
+    <!-- Importando Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        // Cargar la librería de Google Charts
+        google.charts.load('current', {packages:['corechart']});
+
+        // Llamando a la función para dibujar el gráfico
+        google.charts.setOnLoadCallback(dibujarBarras);
+
+        // Colores predefinidos para las barras
+        var colores = ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395'];
+
+        // Creando la función para dibujar el gráfico de barras
+        function dibujarBarras(){
+            fetch('https://jsonplaceholder.typicode.com/todos')
+            .then(response => response.json())
+            .then(data =>{
+                // Definiendo un objeto para almacenar el conteo de tareas por usuario
+                var tareasPorUsuario = {};
+
+                // Recorriendo los datos para contar las tareas por usuario
+                data.forEach(fila => {
+                    if (!tareasPorUsuario[fila.userId]) {
+                        tareasPorUsuario[fila.userId] = 0;
+                    }
+                    tareasPorUsuario[fila.userId]++;
+                });
+
+                // Creando los datos para el gráfico de barras
+                var datosBarras = [['Usuario', 'Cantidad de tareas']];
+                for (var usuarioId in tareasPorUsuario) {
+                    datosBarras.push([usuarioId, tareasPorUsuario[usuarioId]]);
+                }
+
+                // Configuraciones del gráfico
+                var opciones = {
+                  title: 'Total de tareas por usuario',
+                  legend: { position: 'none' },
+                  colors: colores.slice(0, datosBarras.length - 1) // Asignando colores predefinidos
+                };
+
+                // Dibujando el gráfico dentro del DIV correspondiente
+                var grafico = new google.visualization.BarChart(document.getElementById('bar-chart-1'));
+                grafico.draw(google.visualization.arrayToDataTable(datosBarras), opciones);
+            }).catch(error => alert('Error al consumir el API: ' + error));
+        }
+    </script>
+</head>
+<body>
+    <center>
+        <h1>Gráfico de tareas por usuario consumiendo datos en formato JSON desde una API REST</h1>
+    </center>
+    <br>
+    <center>
+        <div id="bar-chart-1" style="width: 800px; height: 400px; border: 1px solid black;"></div>
+    </center>
+</body>
+</html>

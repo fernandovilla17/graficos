@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafico consumiendo un API</title>
+      <!-- Importando Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+       // Cargar la librería de Google Charts
+       google.charts.load('current', {packages:['corechart']});
+
+        //llamando a la funcion para que se dibuje el grafico
+        google.charts.setOnLoadCallback(dibujarPastel);
+        //creando la funcion para dibujar el grafico pastel
+        function dibujarPastel(){
+            fetch('https://jsonplaceholder.typicode.com/todos')
+            .then(response =>response.json())
+            .then(data =>{
+                //alert(data);
+                //definiendo acumuladores
+                var tareasCompletadas=0;
+                var tareasPendientes=0; // <--- Corregido el nombre de la variable
+                //recorrer los datos
+                data.forEach(fila=>{
+                  if(fila.completed){
+                    tareasCompletadas++;
+                  }else{
+                    tareasPendientes++;
+                  }
+                });
+
+                //creando los datos para el Grafico
+                var datosPastel=google.visualization.arrayToDataTable([
+                ['Estado','Cantidad'],
+                ['Completado',tareasCompletadas],
+                ['Pendientes',tareasPendientes]
+                ]);
+                //configuraciones del grafico de datosPastel
+                var opciones={
+                  title:'Porcentaje de tareas por estado', // <--- Agregada coma aquí
+                  slices:{
+                    0:{color:'#54D9AD'},
+                    1:{color:'red'}
+                  }
+                };
+                //Dibujando el grafico dentro del DIV correspondiente
+                var grafico= new google.visualization.PieChart(document.getElementById('pie-chart-1'));
+                grafico.draw(datosPastel,opciones);
+
+
+            }).catch(error => alert('error al consumir el API: '+error));
+        }
+  </script>
+</head>
+<body>
+    <center>
+        <h1>Ejemplo de un gráfico de pastel consumiendo datos en formato JSON desde una API REST</h1>
+      </center>
+      <br>
+      <center>
+        <div id="pie-chart-1" style="width: 800px; height: 400px; border: 1px solid black;"></div>
+      </center>
+</body>
+</html>

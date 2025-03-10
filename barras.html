@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Gráfico de Barras</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    google.charts.load('current', {packages:['corechart', 'bar']});
+    google.charts.setOnLoadCallback(dibujarBarras);
+
+    // Función encargada de dibujar el gráfico
+    function dibujarBarras() {
+      var datos = google.visualization.arrayToDataTable([
+        ['Producto', 'Ventas', {role: 'style'}, {role: 'annotation'}],
+        ['Detergente', 120, 'color: red', '120'],
+        ['Gaseosas', 80, 'color: blue', '80'],
+        ['Lácteos', 250, 'color: green', '250'],
+        ['Cárnicos', 175, 'color: #7f7f7f', '175'],
+        ['Verduras', 200, 'color: orange', '200'],
+        ['Golosinas', 150, 'color: purple', '150'],
+        ['Frutas', 300, 'color: pink', '300'],
+        ['Cereal', 90, 'color: #FFD700', '90'],
+        ['Pan', 180, 'color: #A52A2A', '180'],
+        ['Jabón de baño', 70, 'color: #4682B4', '70'],
+        ['Chocolate', 120, 'color: #8B4513', '120'],
+        ['Gaseosas', 220, 'color: #00CED1', '220'],
+        ['Papel higiénico', 130, 'color: #C8543B', '130'],
+        ['Huevos', 200, 'color: #FF4500', '200']
+      ]);
+
+      // Configurar las opciones del gráfico
+      var opciones = {
+        title: 'Total de ventas por Producto',
+        chartArea: {width: '60%'},
+        hAxis: {
+          title: 'Ventas'
+        },
+        vAxis: {
+          title: 'Producto'
+        },
+        annotations: {
+          alwaysOutside: true,
+        }
+      };
+
+      var grafico = new google.visualization.ColumnChart(document.getElementById('bar-chart-1'));
+      grafico.draw(datos, opciones);
+    }
+  </script>
+</head>
+<body>
+  <center>
+    <h1>Ejemplo de un Gráfico de Barras</h1>
+  </center>
+  <br>
+  <center>
+    <div id="bar-chart-1" style="width: 800px; height: 800px; border: 1px solid black;"></div>
+  </center>
+  <br>
+</body>
+</html>
